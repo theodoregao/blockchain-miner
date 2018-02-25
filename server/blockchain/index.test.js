@@ -15,13 +15,13 @@ describe('Blockchain', () => {
 
   it('adds a new block', () => {
     const data = 'test data';
-    blockchain.addBlock(data);
+    blockchain.addBlockWithData(data);
 
     expect(blockchain.chain[blockchain.chain.length - 1].data).toEqual(data);
   });
 
   it('validates a valid chain', () => {
-    blockchain2.addBlock('foo');
+    blockchain2.addBlockWithData('foo');
 
     expect(blockchain.isValidChain(blockchain2.chain)).toBe(true);
   });
@@ -33,21 +33,21 @@ describe('Blockchain', () => {
   });
 
   it('validates a corrupt chain', () => {
-    blockchain2.addBlock('foo');
+    blockchain2.addBlockWithData('foo');
     blockchain2.chain[1].data = 'Not foo';
 
     expect(blockchain.isValidChain(blockchain2.chain)).toBe(false);
   });
 
   it('replace the chain with a valid chain', () => {
-    blockchain2.addBlock('goo');
+    blockchain2.addBlockWithData('goo');
     blockchain.replaceChain(blockchain2.chain);
 
     expect(blockchain.chain).toEqual(blockchain2.chain);
   });
 
   it('does not replace the chain with one of less than or equal to length', () => {
-    blockchain.addBlock('goo');
+    blockchain.addBlockWithData('goo');
     blockchain.replaceChain(blockchain2.chain);
 
     expect(blockchain.chain).not.toBe(blockchain2.chain);

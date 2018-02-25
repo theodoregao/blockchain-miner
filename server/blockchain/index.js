@@ -1,14 +1,36 @@
 const Block = require('./block');
 
+const { DIFFICULTY } = require('../config');
+
 class Blockchain {
   constructor() {
     this.chain = [Block.genesis()];
   }
 
-  addBlock(data) {
+  addBlockWithData(data) {
     const block = Block.mineBlock(this.chain[this.chain.length - 1], data);
     this.chain.push(block);
     return block;
+  }
+
+  addBlockWithNonce(data, timestamp, nonce) {
+    const block = Block.createBlock(this.chain[this.chain.length - 1], data, timestamp, nonce);
+    if (!this.isValidBlock(block)) {
+      console.log('invalid block');
+      return;
+    }
+    this.chain.push(block);
+    return block;
+  }
+
+  getWorkBlock(data) {
+    const block = new Block(Date.now(), this.chain[this.chain.length - 1].hash, '', data, 0, DIFFICULTY);
+    console.log('nonce', Block.mine(this.chain[this.chain.length - 1], block.timestamp, data));
+    return block;
+  }
+
+  isValidBlock(block) {
+    return Block.isValidBlock(this.chain[this.chain.length - 1], block);
   }
 
   isValidChain(chain) {

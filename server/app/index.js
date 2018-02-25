@@ -23,7 +23,7 @@ app.get('/blocks', (req, res) => {
 });
 
 app.post('/mine', (req, res) => {
-  const block = blockchain.addBlock(req.body.data);
+  const block = blockchain.addBlockWithData(req.body.data);
   console.log(`New block added: ${block.toString()}`);
 
   p2pServer.syncChains();
@@ -50,6 +50,20 @@ app.get('/mine-transactions', (req, res) => {
 
 app.get('/public-key', (req, res) => {
   res.json({ publicKey: wallet.publicKey });
+});
+
+app.get('/work', (req, res) => {
+  res.json(miner.getWork());
+});
+
+app.post('/submit', (req, res) => {
+  block = miner.submit(req.body.jobId, req.body.nonce);
+
+  res.json({
+    jobId: req.body.jobId,
+    succeed: block != undefined,
+    block
+  });
 });
 
 app.listen(HTTP_PORT, () => console.log(`Listening on port ${HTTP_PORT}`));
