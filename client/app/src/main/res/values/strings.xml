@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">BlockchainMining</string>
+
+    <string name="action_work">Work</string>
+</resources>

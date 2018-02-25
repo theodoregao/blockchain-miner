@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "358404775567",
+    "firebase_url": "https://blockchain-mining.firebaseio.com",
+    "project_id": "blockchain-mining",
+    "storage_bucket": "blockchain-mining.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:358404775567:android:939f427c34199e4d",
+        "android_client_info": {
+          "package_name": "shun.gao.sample.blockchain.mining"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "358404775567-q1si2ntitg2jjun5du3q9mrk9d8n9fb1.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "358404775567-goac83j6768246sqqllev9hd1gamc9h9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlxKbx-eeqhJ_qX8Kq1Ixx1NqbFvGqaRM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
