@@ -19,11 +19,15 @@ class Miner {
     // crate a block consisting of the valid transactions
     const block = this.blockchain.addBlockWithData(validTransactions);
     // synchronize the chains in the peer-to-peer server
-    // this.p2pServer.syncChains();
+    if (this.p2pServer) {
+      this.p2pServer.syncChains();
+    }
     // clear the transaction pool
     this.transactionPool.clear();
     // broadcast to every miner to clear their transaction pools
-    // this.p2pServer.broadcastClearTransactions();
+    if (this.p2pServer) {
+      this.p2pServer.broadcastClearTransactions();
+    }
 
     return block;
   }

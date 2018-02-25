@@ -13,7 +13,7 @@ const app = express();
 const blockchain = new Blockchain();
 const wallet = new Wallet();
 const tp = new TransactionPool();
-const p2pServer = new P2pServer(blockchain, tp);
+const p2pServer = process.env.NODE_ENV == 'production' ? undefined : new P2pServer(blockchain, tp);
 const miner = new Miner(blockchain, tp, wallet, p2pServer);
 
 app.use(bodyParser.json());
@@ -26,7 +26,9 @@ app.post('/mine', (req, res) => {
   const block = blockchain.addBlockWithData(req.body.data);
   console.log(`New block added: ${block.toString()}`);
 
-  // p2pServer.syncChains();
+  if (p2pServer) {
+    p2pServer.syncChains();
+  }
 
   res.redirect('/blocks');
 });
@@ -38,7 +40,9 @@ app.get('/transactions', (req, res) => {
 app.post('/transact', (req, res) => {
   const { recipient, amount } = req.body;
   const transaction = wallet.createTransaction(recipient, amount, blockchain, tp);
-  // p2pServer.broadcastTransaction(transaction);
+  if (p2pServer) {
+    p2pServer.broadcastTransaction(transaction);
+  }
   res.redirect('/transactions');
 });
 
