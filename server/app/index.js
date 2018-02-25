@@ -71,4 +71,6 @@ app.post('/submit', (req, res) => {
 });
 
 app.listen(HTTP_PORT, () => console.log(`Listening on port ${HTTP_PORT}`));
-p2pServer.listen();
+if (p2pServer) {
+  p2pServer.listen();
+}
