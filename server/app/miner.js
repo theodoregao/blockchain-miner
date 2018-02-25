@@ -1,6 +1,12 @@
+const gcm = require('node-gcm');
+
 const Wallet = require('../wallet');
 const Transaction = require('../wallet/transaction');
 const ClientJob = require('./client-job');
+
+const { GCM_SERVER_API_KEY } = require('../config');
+
+const sender = new gcm.Sender(GCM_SERVER_API_KEY);
 
 class Miner {
   constructor(blockchain, transactionPool, wallet, p2pServer) {
@@ -32,13 +38,13 @@ class Miner {
     return block;
   }
 
-  getWork() {
+  getWork(clientId) {
     const validTransactions = this.transactionPool.validTransactions();
     if (validTransactions.length == 0)
       validTransactions.push(Transaction.rewardTransaction(this.wallet, Wallet.blockchainWallet()));
     this.jobId++;
     console.log('jobId', this.jobId);
-    this.clientJobs[this.jobId] = new ClientJob(this.jobId, 0, this.blockchain.getWorkBlock(validTransactions));
+    this.clientJobs[this.jobId] = new ClientJob(this.jobId, clientId, this.blockchain.getWorkBlock(validTransactions));
     return this.clientJobs[this.jobId];
   }
 
@@ -56,6 +62,18 @@ class Miner {
   }
 
   clear() {
+    let clientIds = [];
+    for (let jobId in this.clientJobs) {
+      clientIds.push(this.clientJobs[jobId].clientId);
+    }
+    sender.send(new gcm.Message({ data: { message: `work is done` } }), clientIds, (err, res) => {
+      if (err) {
+        console.log('gcm send message error ', err);
+        return;
+      }
+      console.log('gcm send message succeed', res);
+      console.log(clientIds);
+    });
     this.clientJobs = {};
   }
 }

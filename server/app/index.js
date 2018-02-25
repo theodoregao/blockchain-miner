@@ -56,8 +56,8 @@ app.get('/public-key', (req, res) => {
   res.json({ publicKey: wallet.publicKey });
 });
 
-app.get('/work', (req, res) => {
-  res.json(miner.getWork());
+app.post('/work', (req, res) => {
+  res.json(miner.getWork(req.body.clientId));
 });
 
 app.post('/submit', (req, res) => {
