@@ -44,6 +44,10 @@ public class Block {
         this.nonce = nonce;
     }
 
+    public void increaseNonce() {
+        nonce++;
+    }
+
     public int getDifficulty() {
         return difficulty;
     }
@@ -71,6 +75,12 @@ public class Block {
                 .append(", difficulty: ").append(getDifficulty())
                 .append(", data: ").append(getData().substring(0, Math.min(30, getData().length())))
                 .append("}");
+        return sb.toString();
+    }
+
+    public String getHashContent() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(timestamp).append(lastHash).append(data).append(nonce).append(difficulty);
         return sb.toString();
     }
 }
