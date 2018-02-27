@@ -7,10 +7,12 @@ import com.android.volley.Request;
  */
 
 public class Constants {
-    //    public static final String PROTOCOL = "http://";
-    //    public static final String HOST = "192.168.1.253:3001";
+//    public static final String PROTOCOL = "http://";
+//    public static final String HOST = "192.168.1.253:3001";
+
     public static final String PROTOCOL = "https://";
     public static final String HOST = "shun-gao-blockchain.herokuapp.com";
+
     public static final String APPLICATION_JSON = "application/json";
 
     public static final int ERROR_CODE_VOLLEY_RESPONSE_INVALID_JSON_FORMAT = 0xFF01;

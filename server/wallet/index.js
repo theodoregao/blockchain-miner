@@ -58,15 +58,15 @@ class Wallet {
       const recentInputTransaction = walletInputTransactions.reduce(
         (prev, cur) => (prev.blockHeader.timestamp > cur.blockHeader.timestamp ? prev : cur)
       );
-      balance = recentInputTransaction.transactions.find(output => output.address === this.publicKey).amount;
+      balance = recentInputTransaction.transactions.find(transaction => transaction.address === this.publicKey).amount;
       startTime = recentInputTransaction.blockHeader.timestamp;
     }
 
     transactions.forEach(transaction => {
       if (transaction.blockHeader.timestamp > startTime) {
-        transaction.transactions.find(output => {
-          if (output.address === this.publicKey) {
-            balance += output.amount;
+        transaction.transactions.find(transaction => {
+          if (transaction.address === this.publicKey) {
+            balance += transaction.amount;
           }
         });
       }
