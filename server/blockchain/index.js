@@ -25,7 +25,7 @@ class Blockchain {
 
   getWorkBlock(data) {
     const block = new Block(Date.now(), this.chain[this.chain.length - 1].hash, '', data, 0, DIFFICULTY);
-    console.log('nonce', Block.mine(this.chain[this.chain.length - 1], block.timestamp, data));
+    // console.log('nonce', Block.mine(this.chain[this.chain.length - 1], block.timestamp, data));
     return block;
   }
 

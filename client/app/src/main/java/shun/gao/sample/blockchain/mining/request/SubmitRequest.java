@@ -77,6 +77,6 @@ public class SubmitRequest extends JsonRequest {
     }
 
     public interface SubmitRequestListener extends RequestListener {
-        void onSubmitResponse(int jobId, boolean succeed);
+        void onSubmitResponse(long jobId, boolean succeed);
     }
 }

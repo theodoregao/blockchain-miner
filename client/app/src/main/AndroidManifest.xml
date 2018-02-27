@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="shun.gao.sample.blockchain.mining">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
@@ -20,20 +20,24 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name=".gcm.MiningFirebaseMessagingService">
+        <service android:name=".gcm.MiningFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
-        <service
-            android:name=".gcm.MiningFirebaseInstanceIDService">
+        <service android:name=".gcm.MiningFirebaseInstanceIDService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-
+        <service
+            android:name=".service.MiningService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="shun.gao.sample.blockchain.mining.SERVICE_MINING" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

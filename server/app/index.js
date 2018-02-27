@@ -57,7 +57,17 @@ app.get('/public-key', (req, res) => {
 });
 
 app.post('/work', (req, res) => {
+  const validTransactions = tp.validTransactions();
+  if (validTransactions.length == 0) {
+    for (let i = 0; i < 3; i++) {
+      const transaction = wallet.createTransaction(wallet.publicKey, i * 5 + 1, blockchain, tp);
+      if (p2pServer) {
+        p2pServer.broadcastTransaction(transaction);
+      }
+    }
+  }
   res.json(miner.getWork(req.body.clientId));
+  res.status(200);
 });
 
 app.post('/submit', (req, res) => {
@@ -68,6 +78,8 @@ app.post('/submit', (req, res) => {
     succeed: block != undefined,
     block
   });
+
+  res.status(200);
 });
 
 app.listen(HTTP_PORT, () => console.log(`Listening on port ${HTTP_PORT}`));

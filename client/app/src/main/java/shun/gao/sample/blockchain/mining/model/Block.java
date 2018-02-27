@@ -1,10 +1,13 @@
 package shun.gao.sample.blockchain.mining.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Theodore on 2018/2/25.
  */
 
-public class Block {
+public class Block implements Parcelable {
     private long timestamp;
     private String lastHash;
     private String hash;
@@ -83,4 +86,41 @@ public class Block {
         sb.append(timestamp).append(lastHash).append(data).append(nonce).append(difficulty);
         return sb.toString();
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(timestamp);
+        dest.writeString(lastHash);
+        dest.writeString(hash);
+        dest.writeLong(nonce);
+        dest.writeInt(difficulty);
+        dest.writeString(data);
+    }
+
+    private static Block createFromParcel(Parcel in) {
+        Block block = new Block();
+        block.setTimestamp(in.readLong());
+        block.setLastHash(in.readString());
+        block.setHash(in.readString());
+        block.setNonce(in.readLong());
+        block.setDifficulty(in.readInt());
+        block.setData(in.readString());
+        return block;
+    }
+
+    public static final Parcelable.Creator<Block> CREATOR = new Creator<Block>() {
+        public Block createFromParcel(Parcel in) {
+            return Block.createFromParcel(in);
+        }
+
+        public Block[] newArray(int size) {
+            return new Block[size];
+        }
+    };
+
 }

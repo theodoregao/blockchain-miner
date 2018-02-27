@@ -9,4 +9,6 @@ public class Constants {
         public static final String PREFERENCE_NAME = "BLOCKCHAIN_PREFERENCE";
         public static final String PREFERENCE_CLIENT_ID = "CLIENT_ID";
     }
+
+    public static String SERVICE_ACTION = "shun.gao.sample.blockchain.mining.SERVICE_MINING";
 }

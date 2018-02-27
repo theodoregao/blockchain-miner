@@ -49,6 +49,14 @@ class Block {
       hash = Block.hash(timestamp, lastHash, data, nonce, DIFFICULTY);
     } while (hash.substring(0, DIFFICULTY) != '0'.repeat(DIFFICULTY));
 
+    console.log('timestamp', timestamp);
+    console.log('lastHash', lastHash);
+    console.log('data', JSON.stringify(data));
+    console.log('nonce', nonce);
+    console.log('DIFFICULTY', DIFFICULTY);
+    console.log(`${timestamp}${lastHash}${JSON.stringify(data)}${nonce}${DIFFICULTY}`);
+    console.log(hash);
+
     return nonce;
   }
 
@@ -66,7 +74,7 @@ class Block {
   }
 
   static hash(timestamp, lastHash, data, nonce, difficulty) {
-    return ChainUtil.hash(`${timestamp}${lastHash}${data}${nonce}${difficulty}`);
+    return ChainUtil.hash(`${timestamp}${lastHash}${JSON.stringify(data)}${nonce}${difficulty}`);
   }
 
   static blockHash(block) {

@@ -5,6 +5,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import shun.gao.sample.blockchain.mining.model.Block;
+
 /**
  * Created by Theodore on 2018/2/26.
  */

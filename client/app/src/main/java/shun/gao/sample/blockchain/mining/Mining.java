@@ -1,112 +1,142 @@
 package shun.gao.sample.blockchain.mining;
 
+import android.content.ComponentName;
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.RequestQueue;
-import com.android.volley.RetryPolicy;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
+import shun.gao.sample.blockchain.mining.aidl.IMiningService;
+import shun.gao.sample.blockchain.mining.aidl.IMiningServiceCallback;
 import shun.gao.sample.blockchain.mining.model.Block;
-import shun.gao.sample.blockchain.mining.request.JsonRequest;
-import shun.gao.sample.blockchain.mining.request.SubmitRequest;
-import shun.gao.sample.blockchain.mining.request.WorkRequest;
-import shun.gao.sample.blockchain.mining.util.Calculator;
+import shun.gao.sample.blockchain.mining.service.MiningService;
 import shun.gao.sample.blockchain.mining.util.Logger;
 
 public class Mining extends AppCompatActivity {
 
     private static final String TAG = Mining.class.getSimpleName();
 
-    private static RetryPolicy DEFAULT_RETRY_POLICY = new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+    private IMiningService service;
 
-    private RequestQueue requestQueue;
-    private long jobId;
-
-    private Block block;
-    private boolean running;
+    private Button buttonRequestWork;
+    private TextView text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mining);
 
-        requestQueue = Volley.newRequestQueue(this);
-        running = true;
+        bindService(new Intent(this, MiningService.class), connection, Context.BIND_AUTO_CREATE);
 
-        findViewById(R.id.action_work).setOnClickListener(new View.OnClickListener() {
+        text = findViewById(R.id.text);
+        buttonRequestWork = findViewById(R.id.action_work);
+        buttonRequestWork.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new Thread() {
-                    @Override
-                    public void run() {
-                        SharedPreferences preferences = getSharedPreferences(Constants.Preference.PREFERENCE_NAME, Context.MODE_PRIVATE);
-                        String clientId = preferences.getString(Constants.Preference.PREFERENCE_CLIENT_ID, null);
-                        if (clientId != null) {
-                            StringRequest request = new WorkRequest().setClientId(clientId)
-                                    .setWorkRequestListener(new WorkRequest.WorkRequestListener() {
-                                        @Override
-                                        public void onRequestReceived(int jobId, Block block) {
-                                            Logger.v(TAG, "onRequestReceived() jobId: " + jobId + ", block: " + block);
-                                            Mining.this.jobId = jobId;
-                                            Mining.this.block = block;
-
-                                            Logger.v(TAG, "hash content: " + block.getHashContent());
-
-                                            String expectedResult = "";
-                                            for (int i = 0; i < block.getDifficulty(); i++)
-                                                expectedResult += '0';
-                                            while (running) {
-                                                block.increaseNonce();
-                                                String hex = Calculator.hash(block.getHashContent());
-//                                                Logger.v(TAG, "try " + block.getNonce() + ", " + hex);
-                                                if (hex.substring(0, block.getDifficulty()).equals(expectedResult)) {
-                                                    Logger.v(TAG, "hash content: " + block.getHashContent());
-                                                    Logger.v(TAG, hex);
-                                                    submit();
-                                                    return;
-                                                }
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onError(int errorCode) {
-                                            Logger.e(TAG, "onError() " + errorCode);
-                                        }
-                                    }).getRequest();
-                            JsonRequest.printRequest(request);
-                            request.setRetryPolicy(DEFAULT_RETRY_POLICY);
-                            requestQueue.add(request);
-                        } else {
-                            Logger.e(TAG, "client id not found in the shared preferences");
-                        }
-                    }
-                }.start();
+                try {
+                    service.requestWork();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
         });
+        buttonRequestWork.setEnabled(false);
     }
 
-    private void submit() {
-        StringRequest request = new SubmitRequest().setJobId(Mining.this.jobId)
-                .setNonce(block.getNonce())
-                .setSubmitRequestListener(new SubmitRequest.SubmitRequestListener() {
-                    @Override
-                    public void onSubmitResponse(int jobId, boolean succeed) {
-                        Logger.v(TAG, "onSubmitResponse() " + jobId + ", " + succeed);
-                    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (service != null) {
+            setRequestWorkEnable();
+        }
+    }
 
-                    @Override
-                    public void onError(int errorCode) {
-                        Logger.e(TAG, "onError() " + errorCode);
-                    }
-                }).getRequest();
-        JsonRequest.printRequest(request);
-        request.setRetryPolicy(DEFAULT_RETRY_POLICY);
-        requestQueue.add(request);
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unbindService(connection);
+    }
+
+    private ServiceConnection connection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder binder) {
+            service = IMiningService.Stub.asInterface(binder);
+            if (service != null) {
+                log("bind to Mining Service succeed!");
+                try {
+                    service.register(miningServiceCallback);
+                    buttonRequestWork.setEnabled(!service.isWorking());
+                } catch (RemoteException e) {
+                    Logger.exception(TAG, e);
+                }
+            }
+            else {
+                Logger.e(TAG, "bind Mining Service failed!");
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName className) {
+            log("onServiceDisconnected()");
+            service = null;
+        }
+    };
+
+    private IMiningServiceCallback.Stub miningServiceCallback = new IMiningServiceCallback.Stub() {
+
+        @Override
+        public void onWorkReceived(Block block) throws RemoteException {
+            log("onWorkReceived()");
+            setRequestWorkEnable();
+        }
+
+        @Override
+        public void onWorkDone(Block block) throws RemoteException {
+            log("onWorkDone()");
+            setRequestWorkEnable();
+        }
+
+        @Override
+        public void onWorkDoneByOtherDevice() throws RemoteException {
+            log("onWorkDoneByOtherDevice()");
+            setRequestWorkEnable();
+        }
+
+        @Override
+        public void onSubmitResponse(boolean succeed) throws RemoteException {
+            log("onSubmitResponse() " + succeed);
+            setRequestWorkEnable();
+        }
+    };
+
+    private void setRequestWorkEnable() {
+        try {
+            final boolean isWorking = service.isWorking();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    buttonRequestWork.setEnabled(!isWorking);
+                }
+            });
+        } catch (RemoteException e) {
+            Logger.exception(TAG, e);
+        }
+    }
+
+    private void log(final String message) {
+        Logger.v(TAG, message);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                text.setText(message);
+            }
+        });
     }
 }
