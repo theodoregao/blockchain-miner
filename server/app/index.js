@@ -18,6 +18,10 @@ const miner = new Miner(blockchain, tp, wallet, p2pServer);
 
 app.use(bodyParser.json());
 
+app.get('/', (req, res) => {
+  res.redirect('/blocks');
+});
+
 app.get('/blocks', (req, res) => {
   res.json(blockchain.chain);
 });
