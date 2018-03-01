@@ -26,7 +26,7 @@ public class TransactionHolder extends RecyclerView.ViewHolder {
     }
 
     public void render(Transaction transaction) {
-        from.setText(transaction.getFrom().substring(0, Math.min(transaction.getTo().length(), 16)));
+        from.setText(transaction.getFrom().substring(0, Math.min(transaction.getFrom().length(), 16)));
         to.setText(transaction.getTo().substring(0, Math.min(transaction.getTo().length(), 16)));
         amount.setText("$ " + transaction.getAmount());
     }
