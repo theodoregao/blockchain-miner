@@ -188,3 +188,13 @@ Since the time limitation and I have a full-time job, so I can investigate more 
 The following improvement can be done for this challenge:
 * Use native code to do the hard work.
 * Add subscribe functionality, which server can trigger all the connected devices to do the hard work.
+
+### Total Work Hours - 38 hrs
+* Learn what is blockchain and implement a simple server provide transactions - 16 hrs
+* Server side implementation for work/submit - 4 hrs
+* Server side gcm message - 2 hrs
+* Client side gcm implementation - 2 hrs
+* Client side request implementation - 4 hrs
+* Client side Mining Service - 4 hrs
+* Client side UI implementation - 2 hrs
+* README file - 4 hrs
