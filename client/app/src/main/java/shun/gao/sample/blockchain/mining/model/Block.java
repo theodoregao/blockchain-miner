@@ -76,7 +76,7 @@ public class Block implements Parcelable {
                 .append(", hash: ").append(getHash())
                 .append(", nonce: ").append(getNonce())
                 .append(", difficulty: ").append(getDifficulty())
-                .append(", data: ").append(getData().substring(0, Math.min(30, getData().length())))
+                .append(", data size: ").append(getData().length())
                 .append("}");
         return sb.toString();
     }

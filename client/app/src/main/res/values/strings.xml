@@ -2,5 +2,11 @@
     <string name="app_name">BlockchainMining</string>
 
     <string name="action_work">Work</string>
-    <string name="action_submit">Submit</string>
+
+    <string name="label_system_message">System Message</string>
+    <string name="label_transactions">Transactions</string>
+    <string name="label_from">From</string>
+    <string name="label_to">To</string>
+    <string name="label_amount">Amount</string>
+    <string name="label_peer_count">Peer Count</string>
 </resources>

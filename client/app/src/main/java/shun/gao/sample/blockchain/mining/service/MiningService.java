@@ -13,6 +13,9 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,6 +32,13 @@ import shun.gao.sample.blockchain.mining.util.Logger;
 public class MiningService extends Service {
 
     private static final String TAG = MiningService.class.getSimpleName();
+
+    private static final String KEY_EVENT = "event";
+    private static final String KEY_JOB_ID = "jobId";
+    private static final String KEY_PEER_COUNT = "peer_count";
+
+    private static final String EVENT_DONE = "done";
+    private static final String EVENT_PEER_COUNT_UPDATED = "peer_count_updated";
 
     private static RetryPolicy DEFAULT_RETRY_POLICY = new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
 
@@ -61,7 +71,12 @@ public class MiningService extends Service {
         @Override
         public void onFirebaseMessage(String message) throws RemoteException {
             Logger.v(TAG, "onFirebaseMessage() " + message);
-            onWorkDoneByOtherDevice();
+            try {
+                JSONObject json = new JSONObject(message);
+                handleServerMessage(json);
+            } catch (JSONException e) {
+                Logger.exception(TAG, e);
+            }
         }
 
         @Override
@@ -103,8 +118,9 @@ public class MiningService extends Service {
                 .setSubmitRequestListener(new SubmitRequest.SubmitRequestListener() {
                     @Override
                     public void onSubmitResponse(long submittedJobId, boolean succeed) {
-                        if (jobId == submittedJobId)
+                        if (jobId == submittedJobId) {
                             MiningService.this.onSubmitResponse(succeed);
+                        }
                     }
 
                     @Override
@@ -175,6 +191,7 @@ public class MiningService extends Service {
         for (IMiningServiceCallback callback: callbacks) {
             try {
                 callback.onWorkDoneByOtherDevice();
+                callback.onPeerCoundUpdated(0);
             } catch (RemoteException e) {
                 callbacks.remove(callback);
                 Logger.exception(TAG, e);
@@ -192,6 +209,32 @@ public class MiningService extends Service {
                 callbacks.remove(callback);
                 Logger.exception(TAG, e);
             }
+        }
+    }
+
+    private void onPeerCountUpdated(long count) {
+        Logger.v(TAG, "onPeerCountUpdated() " + count);
+        for (IMiningServiceCallback callback: callbacks) {
+            try {
+                callback.onPeerCoundUpdated(count);
+            } catch (RemoteException e) {
+                callbacks.remove(callback);
+                Logger.exception(TAG, e);
+            }
+        }
+    }
+
+    private void handleServerMessage(JSONObject json) throws JSONException {
+        switch (json.getString(KEY_EVENT)) {
+            case EVENT_DONE:
+                if (isWorking) {
+                    onWorkDoneByOtherDevice();
+                }
+                break;
+
+            case EVENT_PEER_COUNT_UPDATED:
+                onPeerCountUpdated(json.getLong(KEY_PEER_COUNT));
+                break;
         }
     }
 }

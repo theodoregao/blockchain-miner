@@ -59,8 +59,17 @@ app.get('/public-key', (req, res) => {
 app.post('/work', (req, res) => {
   const validTransactions = tp.validTransactions();
   if (validTransactions.length == 0) {
-    for (let i = 0; i < 3; i++) {
-      const transaction = wallet.createTransaction(wallet.publicKey, i * 5 + 1, blockchain, tp);
+    let budget = 49;
+    for (let i = 0; i < 3 && budget > 0; i++) {
+      const amount = getRandomInt(budget);
+      budget -= amount;
+      const transaction = wallet.createTransaction('receiver' + i, amount, blockchain, tp);
+      if (p2pServer) {
+        p2pServer.broadcastTransaction(transaction);
+      }
+    }
+    if (budget > 0) {
+      const transaction = wallet.createTransaction('receiver4', budget, blockchain, tp);
       if (p2pServer) {
         p2pServer.broadcastTransaction(transaction);
       }
@@ -85,4 +94,8 @@ app.post('/submit', (req, res) => {
 app.listen(HTTP_PORT, () => console.log(`Listening on port ${HTTP_PORT}`));
 if (p2pServer) {
   p2pServer.listen();
+}
+
+function getRandomInt(max) {
+  return Math.round(Math.random() * (max - 1) + 1, 2);
 }
