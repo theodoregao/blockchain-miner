@@ -27,11 +27,32 @@
 
     </LinearLayout>
 
-    <TextView
-        android:text="@string/label_transactions"
-        android:textSize="@dimen/margin_normal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="@string/label_transactions"
+            android:textSize="@dimen/margin_normal"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:text="@string/label_difficulty"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/difficulty"
+            android:textSize="@dimen/text_normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/transactions"

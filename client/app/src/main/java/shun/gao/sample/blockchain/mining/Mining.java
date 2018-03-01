@@ -33,6 +33,7 @@ public class Mining extends AppCompatActivity {
     private ProgressBar progress;
     private TextView systemMessage;
     private TextView peerCount;
+    private TextView difficulty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +60,7 @@ public class Mining extends AppCompatActivity {
             }
         });
         peerCount = findViewById(R.id.label_peer_count);
+        difficulty = findViewById(R.id.difficulty);
         actionRequestWork.setEnabled(false);
     }
 
@@ -171,6 +173,7 @@ public class Mining extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                difficulty.setText(block == null ? "": "" + block.getDifficulty());
                 transactionAdapter.setBlock(block);
             }
         });

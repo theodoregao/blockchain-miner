@@ -5,6 +5,7 @@
 
     <string name="label_system_message">System Message</string>
     <string name="label_transactions">Transactions</string>
+    <string name="label_difficulty">Difficulty</string>
     <string name="label_from">From</string>
     <string name="label_to">To</string>
     <string name="label_amount">Amount</string>
