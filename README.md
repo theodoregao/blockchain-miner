@@ -117,14 +117,14 @@ Server provides the following end points:
 }
 ```
 
-This was my first time using blockchain. It took me about 2 days to get to understand what blockchain is, and later implemented a simple server for transactions with blockchain. The following materials were helped to get understand blockchain
+This was my first time using blockchain. It took me about 2 days to get to understand what blockchain is, and later implemented a simple server for transactions with blockchain. The following were materials that helped me better understand blockchain
 * [Blockchain 101 - A Visual Demo](https://www.youtube.com/watch?v=_160oMzblY8)
 * [Build a Blockchain and a Cryptocurrency from Scratch](https://www.udemy.com/build-blockchain/learn/v4/overview)
 
 Since this is not a Node.js positon, I will not go too deep to explain my Node.js implementation.
 
 ## Client Side Implementation
-Since this coding challenge is for android developers, I utilized the following android features:
+Since this coding challenge is for android developers, I utilized the following android features
 * aidl - android component communication (IPC)
 * volley - for http web request
 * firebase message - receiving server side notification
@@ -171,7 +171,7 @@ requestQueue.add(request);
 ```
 
 ## Submission
-As required, this repository including the following contents:
+As required, this repository including the following contents
 * A README.md with a description of the problem and your solution.
 * All source code. Package the source files into a zip archive or provide a link to a hosted repository for example on GitHub.
 * A link to the server application that is live and functional.  [https://shun-gao-blockchain.herokuapp.com](https://shun-gao-blockchain.herokuapp.com).
@@ -179,12 +179,12 @@ As required, this repository including the following contents:
 ## Supplement
 
 ### Defect
-Due to the limited time I was allowed to work on this project aside with a full-time job, there are definitely much more to be complete. The following are problems that are not yet completed:
+Due to the limited time I was allowed to work on this project aside with a full-time job, there are definitely much more to be complete. The following are problems that are not yet completed
 * I didn't complete the Extensions list in the coding challenge. 
 * In the challenge overview, 'Use an appropriate authentication mechanism' was cofusing to me. So it wasn't implemented. I believe implementation can be done if more details are available.
 
 ### Improvement
-The following improvement can be done for this challenge:
+The following improvement can be done for this challenge
 * Use native code to do the hard work.
 * Add subscribe functionality, which server can trigger all the connected devices to do the hard work.
 
