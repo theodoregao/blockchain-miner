@@ -18,7 +18,7 @@ Server provides the following end points:
 ```/work``` - returns a JSON-encoded job that the client shall use to begin mining. Server will generate some dummy transactions if server doesn't have any pending transaction yet.
 * Request body
 
-```
+```json
 {
 	"clientId":"eO-7XWW3pws:APA91bHzEJQjHbeRU60DU2BAQjCpuP9ef7R0HIox2xaBS5lAFxZiOZyFu02hOH36RqB99m7Z4NeDSZhyAOFVXp7WuEJbnJ_VUY4J8vAo-BtUiUC08Kq1ivqH9bA66geqOMsC25qHw1mX"
 }
@@ -28,7 +28,7 @@ Server provides the following end points:
 <details>
 <summary>Block details</summary>
 
-```
+```json
 {
     "jobId": 1,
     "clientId": "eO-7XWW3pws:APA91bHzEJQjHbeRU60DU2BAQjCpuP9ef7R0HIox2xaBS5lAFxZiOZyFu02hOH36RqB99m7Z4NeDSZhyAOFVXp7WuEJbnJ_VUY4J8vAo-BtUiUC08Kq1ivqH9bA66geqOMsC25qHw1mX",
@@ -101,7 +101,7 @@ Server provides the following end points:
 
 * Request Body
 
-```
+```json
 {
 	"jobId":12,
 	"nonce":998422
@@ -110,28 +110,27 @@ Server provides the following end points:
 
 * Response
 
-```
+```json
 {
     "jobId": 1,
     "succeed": true
 }
 ```
 
-This is my first time use blockchain, so I spent about 2 days to get understand what is blockchain, and implemented a simple server for transactions with blockchain. The following materials were helped to get understand blockchain
+This was my first time using blockchain. It took me about 2 days to get to understand what blockchain is, and later implemented a simple server for transactions with blockchain. The following materials were helped to get understand blockchain
 * [Blockchain 101 - A Visual Demo](https://www.youtube.com/watch?v=_160oMzblY8)
 * [Build a Blockchain and a Cryptocurrency from Scratch](https://www.udemy.com/build-blockchain/learn/v4/overview)
 
-Since this is not a NodeJS position, so I will not explain too much for NodeJS implementation.
+Since this is not a Node.js positon, I will not go too deep to explain my Node.js implementation.
 
 ## Client Side Implementation
-As the coding challenge is for an android developer, so I use the following android features:
+Since this coding challenge is for android developers, I utilized the following android features:
 * aidl - android component communication (IPC)
 * volley - for http web request
 * firebase message - receiving server side notification
 
 ### Screenshot
 ![images/screenshot.png](images/screenshot.png)
-
 
 The UI provides the following information:
 * How many peers are working with this puzzle.
@@ -150,9 +149,9 @@ There are 4 components for the client side implementation.
 
 ![images/high-level-design.png](images/high-level-design.png)
 
-There is a little bit design for request classes. In order to reuse the code for making different request, we have a base JsonRequest and 2 sub-classes as WorkRequest and SubmitRequest. Each concrete sub-classes have to provide all the request details such as all the request parameters, and handle the response by themselves. You can check the code for details. So for the use of make web request, it can be as simple as:
+There is a little bit design for request classes. In order to reuse the code for making different request, we have a base JsonRequest and 2 sub-classes as WorkRequest and SubmitRequest. Each concrete sub-classes have to provide all the request details including all the request parameters, and can handle the responses by themselves. Please refer to the code for further details. So for the use of making web requests, it can be as simple as:
 
-```
+```java
 StringRequest request = new WorkRequest().setClientId(clientId)
         .setWorkRequestListener(new WorkRequest.WorkRequestListener() {
             @Override
@@ -180,16 +179,16 @@ As required, this repository including the following contents:
 ## Supplement
 
 ### Defect
-Since the time limitation and I have a full-time job, so I can investigate more time to complete this challenge. The following problems I still not solve:
+Due to the limited time I was allowed to work on this project aside with a full-time job, there are definitely much more to be complete. The following are problems that are not yet completed:
 * I didn't complete the Extensions list in the coding challenge. 
-* For the challenge overview, 'Use an appropriate authentication mechanism' was confused me. So I didn't implement this item. Implementation can be done if more details were provided.
+* In the challenge overview, 'Use an appropriate authentication mechanism' was cofusing to me. So it wasn't implemented. I believe implementation can be done if more details are available.
 
 ### Improvement
 The following improvement can be done for this challenge:
 * Use native code to do the hard work.
 * Add subscribe functionality, which server can trigger all the connected devices to do the hard work.
 
-### Total Work Hours - 38 hrs
+### Total Work Hours - 40 hrs
 * Learn what is blockchain and implement a simple server provide transactions - 16 hrs
 * Server side implementation for work/submit - 4 hrs
 * Server side gcm message - 2 hrs
@@ -198,3 +197,4 @@ The following improvement can be done for this challenge:
 * Client side Mining Service - 4 hrs
 * Client side UI implementation - 2 hrs
 * README file - 4 hrs
+* Other - 2 hrs
