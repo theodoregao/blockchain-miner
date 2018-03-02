@@ -1,11 +1,11 @@
 # Distributed Mining System
 
 ## Description
-This is a simplified solution for [BMW Android Coding Challenge](https://github.com/BMWGroupTechnologyOfficeUSA/dli-coding-challenge/tree/master/android).
+This is a simplified solution for [BMW Android Coding Challenge](./problem/README.md).
 
-The solution create a central web service that delegates and aggregates the work to the client, and use android application as the client side to do the hard work, solving the puzzle.
+The solution creates a central web service that delegates and aggregates the work to the clients, and use android application as the client side to do the hard work, solving the puzzle.
 
-The solution contains the server side, which implemented with NodeJS, and client side, which implemented with Android.
+The solution contains a server side, which implemented with NodeJS, and a client side, which implemented with Android.
 
 ## Server Side Implementation
 Server side implemented with NodeJS. It uses express to provide the web-service, and uses gcm to push message back to the clients.
